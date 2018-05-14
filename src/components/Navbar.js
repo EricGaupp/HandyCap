@@ -39,10 +39,10 @@ class Navbar extends Component {
     return (
       <div>
       <ul id="dropdown1" className="dropdown-content">
-        <li><NavLink to="/">Home</NavLink></li>
-        <li><NavLink to="/profile">Profile</NavLink></li>
+        <li className="blue-grey darken-1"><NavLink to="/"><span className="white-text">Home</span></NavLink></li>
+        <li className="blue-grey darken-1"><NavLink to="/profile"><span className="white-text">Profile</span></NavLink></li>
       </ul>
-		  <nav className="green">
+		  <nav>
         <div className="container">
     		  <div className="nav-wrapper">
       		  <a className="brand-logo">HandyCap</a>

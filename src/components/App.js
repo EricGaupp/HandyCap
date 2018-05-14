@@ -13,8 +13,12 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      userID: "Eric"
+      userID: null
     }
+  }
+
+  componentDidMount(){
+  {/*Check for JWT, authentiate and update state.userID if valid*/}
   }
 
   render() {
