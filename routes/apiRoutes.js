@@ -40,10 +40,8 @@ router.post('/login', (req, res) => {
 			username: req.body.username
 		}
 	}).then( result => {
-		console.log(result.dataValues.password);
 		if(result){
 			bcrypt.compare(req.body.password, result.dataValues.password, (err, compared) => {
-				console.log(compared);
 				if (compared) {
 					//TODO Give JWT Token upon logging in
 					res.json({

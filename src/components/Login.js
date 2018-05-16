@@ -76,7 +76,7 @@ class Login extends Component {
 									<div className="input-field col s12">
 										<input id="password" type="password"  value={this.state.passwordValue} onChange={this.handlePasswordChange} />
 										<label htmlFor="password">Password</label>
-										<button className="btn-flat waves-effect waves-light" onClick={this.handleLogin}>Submit<i className="material-icons right">send</i></button>
+										<button className="btn waves-effect waves-light" onClick={this.handleLogin}>Submit<i className="material-icons right">send</i></button>
 										<button className="btn waves-effect waves-light right" onClick={this.handleRegister}>Register<i className="material-icons right">send</i></button>
 									</div>
 								</div>
