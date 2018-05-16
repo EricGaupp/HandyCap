@@ -31,7 +31,16 @@ class Login extends Component {
 	handleLogin(event){
 		event.preventDefault();
 		console.log("Logging In!");
-		{/*AJAX post call to Server*/}
+		axios.post('/api/login', {
+			username: this.state.emailValue,
+			password: this.state.passwordValue
+		})
+		.then(response => {
+			console.log(response);
+		})
+		.catch(error => {
+			console.log(error);
+		})
 	}
 
 	handleRegister(event){
