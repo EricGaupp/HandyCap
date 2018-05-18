@@ -1,9 +1,44 @@
 var bcrypt = require('bcrypt');
 var db = require('../db/models');
 var express = require('express');
+var jwt = require('jsonwebtoken');
 var router = express.Router();
 
 const saltRounds = 10;
+const jwtKey = "SuperSecretKey";
+
+router.post('/login', (req, res) => {
+	db.user.findOne({
+		where: {
+			username: req.body.username
+		}
+	}).then( result => {
+		if(result){
+			const user = result.dataValues;
+			console.log(user);
+			bcrypt.compare(req.body.password, result.dataValues.password, (err, compared) => {
+				if (compared) {
+					jwt.sign({ user: user.username }, jwtKey, {expiresIn: '45s'}, (err, token) => {
+						res.json({
+							message: "Matched hash...logging in",
+							token: token,
+							user: user.username
+						});
+					});
+				} else {
+					res.json({
+						message: "Password did not match"
+					})
+				}
+			})
+		}
+		else {
+			res.json({
+				message: "User not found"
+			});
+		}
+	})
+})
 
 router.post('/register', (req,res)=>{
 	//Check user database for unique ID and create entry if valid
@@ -34,30 +69,16 @@ router.post('/register', (req,res)=>{
 	})
 });
 
-router.post('/login', (req, res) => {
-	db.user.findOne({
-		where: {
-			username: req.body.username
-		}
-	}).then( result => {
-		if(result){
-			bcrypt.compare(req.body.password, result.dataValues.password, (err, compared) => {
-				if (compared) {
-					//TODO Give JWT Token upon logging in
-					res.json({
-						message: "Matched hash...logging in"
-					});
-				} else {
-					res.json({
-						message: "Password did not match"
-					})
-				}
-			})
-		}
-		else {
+router.post('/verify', (req, res) => {
+	jwt.verify(req.body.token, jwtKey, (err, decoded)=> {
+		if (decoded) {
 			res.json({
-				message: "User not found"
+				decoded: decoded
 			});
+		} else {
+			res.json({
+				message: "invalid token"
+			})
 		}
 	})
 })

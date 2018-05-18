@@ -30,13 +30,13 @@ class Login extends Component {
 
 	handleLogin(event){
 		event.preventDefault();
-		console.log("Logging In!");
 		axios.post('/api/login', {
 			username: this.state.emailValue,
 			password: this.state.passwordValue
 		})
 		.then(response => {
-			console.log(response);
+			this.props.updateUser(response.data.user);
+			localStorage.setItem('authToken', response.data.token);
 		})
 		.catch(error => {
 			console.log(error);
@@ -45,7 +45,6 @@ class Login extends Component {
 
 	handleRegister(event){
 		event.preventDefault();
-		console.log("Registering!");
 		axios.post('/api/register', {
 			username: this.state.emailValue,
 			password: this.state.passwordValue
