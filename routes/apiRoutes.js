@@ -10,19 +10,25 @@ const jwtKey = "SuperSecretKey";
 router.post('/login', (req, res) => {
 	db.user.findOne({
 		where: {
-			username: req.body.username
+			email: req.body.email
 		}
 	}).then( result => {
 		if(result){
-			const user = result.dataValues;
-			console.log(user);
 			bcrypt.compare(req.body.password, result.dataValues.password, (err, compared) => {
 				if (compared) {
-					jwt.sign({ user: user.username }, jwtKey, {expiresIn: '45s'}, (err, token) => {
+					jwt.sign({
+						userID: result.dataValues.id, 
+						firstName: result.dataValues.firstName, 
+						lastName: result.dataValues.lastName 
+					}, jwtKey, {expiresIn: '1h'}, (err, token) => {
 						res.json({
 							message: "Matched hash...logging in",
 							token: token,
-							user: user.username
+							user: {
+								id: result.dataValues.id,
+								firstName: result.dataValues.firstName,
+								lastName: result.dataValues.lastName
+							}
 						});
 					});
 				} else {
@@ -44,7 +50,7 @@ router.post('/register', (req,res)=>{
 	//Check user database for unique ID and create entry if valid
 	db.user.findOne({
 		where: {
-			username: req.body.username
+			email: req.body.email
 		}
 	}).then( result => {
 		if (!result){
@@ -53,8 +59,10 @@ router.post('/register', (req,res)=>{
     			bcrypt.hash(req.body.password, salt, (err, hash) => {
         		// Store hash in your password DB.
         			db.user.create({
-						username: req.body.username,
-						password: hash
+						email: req.body.email,
+						password: hash,
+						firstName: req.body.firstName,
+						lastName: req.body.lastName
 					});
 					res.json({
 						message: "New User Registered"
@@ -78,7 +86,7 @@ router.post('/verify', (req, res) => {
 		} else {
 			res.json({
 				message: "invalid token"
-			})
+			});
 		}
 	})
 })

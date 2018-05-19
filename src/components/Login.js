@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 import axios from 'axios';
 import '../css/materialize.css';
 
@@ -13,7 +14,6 @@ class Login extends Component {
 		this.handleEmailChange = this.handleEmailChange.bind(this);
 		this.handlePasswordChange = this.handlePasswordChange.bind(this);
 		this.handleLogin = this.handleLogin.bind(this);
-		this.handleRegister = this.handleRegister.bind(this);
 	}
 
 	handleEmailChange(event){
@@ -31,30 +31,16 @@ class Login extends Component {
 	handleLogin(event){
 		event.preventDefault();
 		axios.post('/api/login', {
-			username: this.state.emailValue,
+			email: this.state.emailValue,
 			password: this.state.passwordValue
 		})
 		.then(response => {
-			this.props.updateUser(response.data.user);
+			this.props.updateUser(response.data.user.id, response.data.user.firstName, response.data.user.lastName);
 			localStorage.setItem('authToken', response.data.token);
 		})
 		.catch(error => {
 			console.log(error);
 		})
-	}
-
-	handleRegister(event){
-		event.preventDefault();
-		axios.post('/api/register', {
-			username: this.state.emailValue,
-			password: this.state.passwordValue
-		})
-		.then(function (response) {
-			console.log(response);
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
 	}
 
 	render() {
@@ -67,16 +53,15 @@ class Login extends Component {
 								<span className="card-title">Login</span>
 								<div className="row">
 									<div className="input-field col s12">
-										<input id="email" type="email" className="validate"  value={this.state.emailValue} onChange={this.handleEmailChange} />
-										<label htmlFor="email">Email</label>
+										<input id="loginEmail" type="email" className="validate"  value={this.state.emailValue} onChange={this.handleEmailChange} />
+										<label htmlFor="loginEmail">Email</label>
 									</div>
 								</div>
 								<div className="row">
 									<div className="input-field col s12">
-										<input id="password" type="password"  value={this.state.passwordValue} onChange={this.handlePasswordChange} />
-										<label htmlFor="password">Password</label>
-										<button className="btn waves-effect waves-light" onClick={this.handleLogin}>Submit<i className="material-icons right">send</i></button>
-										<button className="btn waves-effect waves-light right" onClick={this.handleRegister}>Register<i className="material-icons right">send</i></button>
+										<input id="loginPassword" type="password"  value={this.state.passwordValue} onChange={this.handlePasswordChange} />
+										<label htmlFor="loginPassword">Password</label>
+										<button className="btn waves-effect waves-light right" onClick={this.handleLogin}>Submit<i className="material-icons right">send</i></button>
 									</div>
 								</div>
 							</div>

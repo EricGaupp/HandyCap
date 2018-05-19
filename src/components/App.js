@@ -2,19 +2,21 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import {
 	BrowserRouter as Router,
-	Route
+	Route, Link
 } from 'react-router-dom';
 
 import Home from './Home';
 import Login from './Login';
 import Navbar from './Navbar';
 import Profile from './Profile';
+import Register from './Register';
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      userID: null
+      userID: null,
+      userFirstName: null
     }
     this.checkToken = this.checkToken.bind(this);
     this.updateUser = this.updateUser.bind(this);
@@ -26,7 +28,8 @@ class App extends Component {
     }).then(response =>{
       if (response.data.decoded){
         this.setState({
-          userID: response.data.decoded.user
+          userID: response.data.decoded.userID,
+          userFirstName: response.data.decoded.firstName
         });
       }
     }).catch(error => {
@@ -36,13 +39,16 @@ class App extends Component {
 
   componentDidMount(){
     const authToken = localStorage.getItem("authToken");
-    this.setState({authToken: authToken});
-    this.checkToken(authToken);
+    if (authToken) {
+      this.checkToken(authToken);
+    }
   }
 
-  updateUser(user){
+  updateUser(userID, userFirstName, userLastName){
     this.setState({
-      userID: user
+      userID: userID,
+      userFirstName: userFirstName,
+      userLastName: userLastName
     });
   }
 
@@ -50,10 +56,11 @@ class App extends Component {
   	return (
     	<Router>
     		<div>
-    			<Navbar user={this.state.userID} />
+    			<Navbar user={this.state.userFirstName} />
     			<Route exact path="/" component={Home} />
-    			<Route exact path="/login" render={()=><Login updateUser={this.updateUser} />} />
-    			<Route exact path="/profile" component={Profile} />
+    			<Route path="/login" render={()=><Login updateUser={this.updateUser} />} />
+          <Route path="/register" component={Register} />
+    			<Route path="/profile" component={Profile} />
     		</div>
     	</Router>
     );
