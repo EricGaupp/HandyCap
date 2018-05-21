@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 import axios from 'axios';
 import '../css/materialize.css';
 
@@ -35,8 +35,11 @@ class Login extends Component {
 			password: this.state.passwordValue
 		})
 		.then(response => {
-			this.props.updateUser(response.data.user.id, response.data.user.firstName, response.data.user.lastName);
-			localStorage.setItem('authToken', response.data.token);
+			if (response.data.user.id){
+				this.props.updateUser(response.data.user.id, response.data.user.firstName, response.data.user.lastName);
+				localStorage.setItem('authToken', response.data.token);
+				this.props.history.push('/profile');
+			}
 		})
 		.catch(error => {
 			console.log(error);

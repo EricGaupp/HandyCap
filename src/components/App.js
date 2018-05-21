@@ -57,10 +57,13 @@ class App extends Component {
     	<Router>
     		<div>
     			<Navbar user={this.state.userFirstName} />
-    			<Route exact path="/" component={Home} />
-    			<Route path="/login" render={()=><Login updateUser={this.updateUser} />} />
+    			<Route exact path="/" render={()=>
+            this.state.userID ? (
+              <Profile />
+            ) : (
+              <Login updateUser={this.updateUser} />
+            )} />
           <Route path="/register" component={Register} />
-    			<Route path="/profile" component={Profile} />
     		</div>
     	</Router>
     );
