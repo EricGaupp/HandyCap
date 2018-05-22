@@ -53,6 +53,7 @@ class App extends Component {
   }
 
   render() {
+    //put return inside async function to prevent login screen from flashing before user is authenticated by stored JWT
   	return (
     	<Router>
     		<div>
