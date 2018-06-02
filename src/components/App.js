@@ -58,7 +58,7 @@ class App extends Component {
     	<Router>
     		<div>
     			<Navbar user={this.state.userFirstName} />
-    			<Route exact path="/" render={()=>
+          <Route exact path="/" render={()=>
             this.state.userID ? (
               <Profile />
             ) : (
