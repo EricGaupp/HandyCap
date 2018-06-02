@@ -1,4 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
+    //switching to MongoDB
+
     var user = sequelize.define("user", {
         firstName: {
             type: DataTypes.STRING,
