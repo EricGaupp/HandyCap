@@ -1,14 +1,22 @@
-import React, { Component } from 'react';
-import '../css/materialize.css';
+import React from "react";
 
-class Home extends Component {
-	render() {
-		return (
-			<div className="container">
-				<a>Homepage</a>
-			</div>
-		);
+import Login from "./Login";
+import Spinner from "./Spinner";
+
+const Home = props => {
+	if (!props.user && !props.tokenChecked) {
+		return <Spinner />;
 	}
-}
+
+	return (
+		<div>
+			{props.user && props.tokenChecked ? (
+				props.history.push("/profile")
+			) : (
+				<Login {...props} />
+			)}
+		</div>
+	);
+};
 
 export default Home;

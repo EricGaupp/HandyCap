@@ -1,49 +1,52 @@
-import React, { Component } from 'react';
-import { Redirect, withRouter } from 'react-router';
-import axios from 'axios';
-import '../css/materialize.css';
+import React, { Component } from "react";
+import axios from "axios";
 
 class Login extends Component {
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = {
-			emailValue: '',
-			passwordValue: ''
-		}
+			emailValue: "",
+			passwordValue: ""
+		};
 
 		this.handleEmailChange = this.handleEmailChange.bind(this);
 		this.handlePasswordChange = this.handlePasswordChange.bind(this);
 		this.handleLogin = this.handleLogin.bind(this);
 	}
 
-	handleEmailChange(event){
+	handleEmailChange(event) {
 		this.setState({
 			emailValue: event.target.value
 		});
 	}
 
-	handlePasswordChange(event){
+	handlePasswordChange(event) {
 		this.setState({
 			passwordValue: event.target.value
 		});
 	}
 
-	handleLogin(event){
+	handleLogin(event) {
 		event.preventDefault();
-		axios.post('/api/login', {
-			email: this.state.emailValue,
-			password: this.state.passwordValue
-		})
-		.then(response => {
-			if (response.data.user.id){
-				this.props.updateUser(response.data.user.id, response.data.user.firstName, response.data.user.lastName);
-				localStorage.setItem('authToken', response.data.token);
-				this.props.history.push('/profile');
-			}
-		})
-		.catch(error => {
-			console.log(error);
-		})
+		axios
+			.post("/api/login", {
+				email: this.state.emailValue,
+				password: this.state.passwordValue
+			})
+			.then(response => {
+				console.log(response);
+				if (response.data.user.userID) {
+					this.props.updateUser(
+						response.data.user.userID,
+						response.data.user.firstName
+					);
+					localStorage.setItem("authToken", response.data.token);
+					this.props.history.push("/profile");
+				}
+			})
+			.catch(error => {
+				console.log(error);
+			});
 	}
 
 	render() {
@@ -56,15 +59,51 @@ class Login extends Component {
 								<span className="card-title">Login</span>
 								<div className="row">
 									<div className="input-field col s12">
-										<input id="loginEmail" type="email" className="validate"  value={this.state.emailValue} onChange={this.handleEmailChange} />
-										<label htmlFor="loginEmail">Email</label>
+										<input
+											id="loginEmail"
+											type="email"
+											className="validate"
+											value={this.state.emailValue}
+											onChange={this.handleEmailChange}
+										/>
+										<label htmlFor="loginEmail">
+											Email
+										</label>
 									</div>
 								</div>
 								<div className="row">
 									<div className="input-field col s12">
-										<input id="loginPassword" type="password"  value={this.state.passwordValue} onChange={this.handlePasswordChange} />
-										<label htmlFor="loginPassword">Password</label>
-										<button className="btn waves-effect waves-light right" onClick={this.handleLogin}>Submit<i className="material-icons right">send</i></button>
+										<input
+											id="loginPassword"
+											type="password"
+											value={this.state.passwordValue}
+											onChange={this.handlePasswordChange}
+										/>
+										<label htmlFor="loginPassword">
+											Password
+										</label>
+										<button
+											className="btn waves-effect waves-light right"
+											onClick={this.handleLogin}
+										>
+											Submit
+											<i className="material-icons right">
+												send
+											</i>
+										</button>
+										<button
+											className="btn waves-effect waves-light right"
+											onClick={() => {
+												this.props.history.push(
+													"register"
+												);
+											}}
+										>
+											Register
+											<i className="material-icons right">
+												send
+											</i>
+										</button>
 									</div>
 								</div>
 							</div>

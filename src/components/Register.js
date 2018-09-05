@@ -1,16 +1,15 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import '../css/materialize.css';
+import React, { Component } from "react";
+import axios from "axios";
 
 class Register extends Component {
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = {
-			firstName: '',
-			lastName: '',
-			emailValue: '',
-			passwordValue: ''
-		}
+			firstName: "",
+			lastName: "",
+			emailValue: "",
+			passwordValue: ""
+		};
 
 		this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
 		this.handleLastNameChange = this.handleLastNameChange.bind(this);
@@ -19,44 +18,49 @@ class Register extends Component {
 		this.handleRegister = this.handleRegister.bind(this);
 	}
 
-	handleFirstNameChange(event){
+	handleFirstNameChange(event) {
 		this.setState({
 			firstName: event.target.value
 		});
 	}
 
-	handleLastNameChange(event){
+	handleLastNameChange(event) {
 		this.setState({
 			lastName: event.target.value
 		});
 	}
 
-	handleEmailChange(event){
+	handleEmailChange(event) {
 		this.setState({
 			emailValue: event.target.value
 		});
 	}
 
-	handlePasswordChange(event){
+	handlePasswordChange(event) {
 		this.setState({
 			passwordValue: event.target.value
 		});
 	}
 
-	handleRegister(event){
+	handleRegister(event) {
 		event.preventDefault();
-		axios.post('/api/register', {
-			email: this.state.emailValue,
-			password: this.state.passwordValue,
-			firstName: this.state.firstName,
-			lastName: this.state.lastName
-		})
-		.then(function (response) {
-			console.log(response);
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
+		axios
+			.post("/api/register", {
+				email: this.state.emailValue,
+				password: this.state.passwordValue,
+				firstName: this.state.firstName,
+				lastName: this.state.lastName
+			})
+			.then(response => {
+				this.props.updateUser(
+					response.data.userID,
+					response.data.firstName
+				);
+				this.props.history.push("/profile");
+			})
+			.catch(error => {
+				console.log(error);
+			});
 	}
 
 	render() {
@@ -69,27 +73,68 @@ class Register extends Component {
 								<span className="card-title">Register</span>
 								<div className="row">
 									<div className="input-field col s12">
-										<input id="firstName" type="text" className="validate"  value={this.state.firstName} onChange={this.handleFirstNameChange} />
-										<label htmlFor="firstName">First Name</label>
+										<input
+											id="firstName"
+											type="text"
+											className="validate"
+											value={this.state.firstName}
+											onChange={
+												this.handleFirstNameChange
+											}
+										/>
+										<label htmlFor="firstName">
+											First Name
+										</label>
 									</div>
 								</div>
 								<div className="row">
 									<div className="input-field col s12">
-										<input id="lastName" type="text" className="validate"  value={this.state.lastName} onChange={this.handleLastNameChange} />
-										<label htmlFor="lastName">Last Name</label>
+										<input
+											id="lastName"
+											type="text"
+											className="validate"
+											value={this.state.lastName}
+											onChange={this.handleLastNameChange}
+										/>
+										<label htmlFor="lastName">
+											Last Name
+										</label>
 									</div>
 								</div>
 								<div className="row">
 									<div className="input-field col s12">
-										<input id="registerEmail" type="email" className="validate"  value={this.state.emailValue} onChange={this.handleEmailChange} />
-										<label htmlFor="registerEmail">Email</label>
+										<input
+											id="registerEmail"
+											type="email"
+											className="validate"
+											value={this.state.emailValue}
+											onChange={this.handleEmailChange}
+										/>
+										<label htmlFor="registerEmail">
+											Email
+										</label>
 									</div>
 								</div>
 								<div className="row">
 									<div className="input-field col s12">
-										<input id="registerPassword" type="password"  value={this.state.passwordValue} onChange={this.handlePasswordChange} />
-										<label htmlFor="registerPassword">Password</label>
-										<button className="btn waves-effect waves-light right" onClick={this.handleRegister}>Register<i className="material-icons right">send</i></button>
+										<input
+											id="registerPassword"
+											type="password"
+											value={this.state.passwordValue}
+											onChange={this.handlePasswordChange}
+										/>
+										<label htmlFor="registerPassword">
+											Password
+										</label>
+										<button
+											className="btn waves-effect waves-light right"
+											onClick={this.handleRegister}
+										>
+											Register
+											<i className="material-icons right">
+												send
+											</i>
+										</button>
 									</div>
 								</div>
 							</div>
