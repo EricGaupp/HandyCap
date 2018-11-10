@@ -1,9 +1,12 @@
 import axios from "axios";
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 
+import AddScore from "./AddScore";
 import Home from "./Home";
+import Login from "./Login";
 import Navbar from "./Navbar";
+import PrivateRoute from "./PrivateRoute";
 import Profile from "./Profile";
 import Register from "./Register";
 
@@ -19,6 +22,7 @@ class App extends Component {
     };
     this.checkToken = this.checkToken.bind(this);
     this.updateUser = this.updateUser.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   checkToken() {
@@ -49,10 +53,6 @@ class App extends Component {
     }
   }
 
-  componentDidMount() {
-    this.checkToken();
-  }
-
   updateUser(userID, userFirstName) {
     this.setState({
       userID: userID,
@@ -60,41 +60,59 @@ class App extends Component {
     });
   }
 
+  logout() {
+    localStorage.removeItem("authToken");
+    this.updateUser(null, null);
+    this.props.history.push("/");
+  }
+
+  componentDidMount() {
+    this.checkToken();
+  }
+
   render() {
     return (
-      <Router>
-        <div>
-          <Navbar user={this.state.userFirstName} />
+      <div>
+        <Navbar user={this.state.userFirstName} logout={this.logout} />
+        <Switch>
+          <Route exact path="/" component={Home} />
           <Route
             exact
-            path="/"
+            path="/login"
             render={props => (
-              <Home
+              <Login
                 user={this.state.userID}
-                updateUser={this.updateUser}
                 tokenChecked={this.state.tokenChecked}
+                updateUser={this.updateUser}
                 {...props}
               />
             )}
           />
           <Route
             exact
-            path="/profile"
-            render={props => (
-              <Profile user={this.state.userFirstName} {...props} />
-            )}
-          />
-          <Route
-            exact
             path="/register"
             render={props => (
-              <Register updateUser={this.updateUser} {...props} />
+              <Register
+                user={this.state.userID}
+                updateUser={this.updateUser}
+                {...props}
+              />
             )}
           />
-        </div>
-      </Router>
+          {/*Protected Routes for Authenticated Users*/}
+          <PrivateRoute
+            exact
+            path="/profile"
+            component={Profile}
+            user={this.state.userID}
+          />
+          <PrivateRoute exact path="/addscore" component={AddScore} />
+        </Switch>
+      </div>
     );
   }
 }
 
-export default App;
+const AppWithRouter = withRouter(App);
+
+export default AppWithRouter;

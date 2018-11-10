@@ -1,5 +1,12 @@
 import React, { Component } from "react";
+import { Redirect, Link } from "react-router-dom";
 import axios from "axios";
+
+import Spinner from "./Spinner";
+
+const loginButtonStyle = {
+	width: "100%"
+};
 
 class Login extends Component {
 	constructor(props) {
@@ -34,7 +41,6 @@ class Login extends Component {
 				password: this.state.passwordValue
 			})
 			.then(response => {
-				console.log(response);
 				if (response.data.user.userID) {
 					this.props.updateUser(
 						response.data.user.userID,
@@ -50,66 +56,85 @@ class Login extends Component {
 	}
 
 	render() {
+		const { user, tokenChecked } = this.props;
 		return (
-			<div className="container">
-				<div className="row">
-					<form className="col s12 m6 offset-m3">
-						<div className="card blue-grey darken-1">
-							<div className="card-content white-text">
-								<span className="card-title">Login</span>
-								<div className="row">
-									<div className="input-field col s12">
-										<input
-											id="loginEmail"
-											type="email"
-											className="validate"
-											value={this.state.emailValue}
-											onChange={this.handleEmailChange}
-										/>
-										<label htmlFor="loginEmail">
-											Email
-										</label>
+			<div>
+				{!tokenChecked && <Spinner />}
+				{user ? (
+					<Redirect to="/profile" />
+				) : (
+					<div className="container">
+						<div className="row">
+							<form className="col s12 m6 offset-m3">
+								<div className="card blue-grey darken-1">
+									<div className="card-content white-text">
+										<span className="card-title">
+											Login
+										</span>
+										<div className="row">
+											<div className="input-field col s12">
+												<input
+													id="loginEmail"
+													type="email"
+													className="validate"
+													value={
+														this.state.emailValue
+													}
+													onChange={
+														this.handleEmailChange
+													}
+												/>
+												<label htmlFor="loginEmail">
+													Email
+												</label>
+											</div>
+										</div>
+										<div className="row">
+											<div className="input-field col s12">
+												<input
+													id="loginPassword"
+													type="password"
+													value={
+														this.state.passwordValue
+													}
+													onChange={
+														this
+															.handlePasswordChange
+													}
+												/>
+												<label htmlFor="loginPassword">
+													Password
+												</label>
+											</div>
+										</div>
+										<div className="row center-align">
+											<div className="col s12">
+												<button
+													style={loginButtonStyle}
+													className="btn waves-effect waves-light"
+													onClick={this.handleLogin}
+												>
+													Log In
+												</button>
+											</div>
+										</div>
+										<div className="row">
+											<div className="col s12">
+												<p className="center-align">
+													New User? Create an account
+													<Link to="/register">
+														{" "}
+														here
+													</Link>
+												</p>
+											</div>
+										</div>
 									</div>
 								</div>
-								<div className="row">
-									<div className="input-field col s12">
-										<input
-											id="loginPassword"
-											type="password"
-											value={this.state.passwordValue}
-											onChange={this.handlePasswordChange}
-										/>
-										<label htmlFor="loginPassword">
-											Password
-										</label>
-										<button
-											className="btn waves-effect waves-light right"
-											onClick={this.handleLogin}
-										>
-											Submit
-											<i className="material-icons right">
-												send
-											</i>
-										</button>
-										<button
-											className="btn waves-effect waves-light right"
-											onClick={() => {
-												this.props.history.push(
-													"register"
-												);
-											}}
-										>
-											Register
-											<i className="material-icons right">
-												send
-											</i>
-										</button>
-									</div>
-								</div>
-							</div>
+							</form>
 						</div>
-					</form>
-				</div>
+					</div>
+				)}
 			</div>
 		);
 	}

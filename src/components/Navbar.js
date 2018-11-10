@@ -1,9 +1,14 @@
 import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const $ = window.jQuery;
 
 class Navbar extends Component {
+  handleLogout = e => {
+    e.preventDefault();
+    this.props.logout();
+  };
+
   componentDidMount() {
     if (this.props.user) {
       $(document).ready(function() {
@@ -39,36 +44,40 @@ class Navbar extends Component {
       <div>
         <ul id="dropdown1" className="dropdown-content">
           <li className="blue-grey darken-1">
-            <NavLink to="/">
-              <span className="white-text">Home</span>
-            </NavLink>
+            <Link to="/" className="white-text">
+              <span>Home</span>
+            </Link>
           </li>
           <li className="blue-grey darken-1">
-            <NavLink to="/profile">
-              <span className="white-text">Profile</span>
-            </NavLink>
+            <Link to="/profile" className="white-text">
+              <span>Profile</span>
+            </Link>
           </li>
           <li className="blue-grey darken-1">
-            <NavLink to="/logout">
-              <span className="white-text">Logout</span>
-            </NavLink>
+            <Link to="/">
+              <span className="white-text" onClick={this.handleLogout}>
+                Logout
+              </span>
+            </Link>
           </li>
         </ul>
         <nav>
-          <div className="nav-wrapper">
-            <a className="brand-logo">HandyCap</a>
-            <ul id="nav-mobile" className="right hide-on-med-and-down">
-              <li>
-                {this.props.user ? (
-                  <a className="dropdown-button" data-activates="dropdown1">
-                    Welcome, {this.props.user}!
-                    <i className="material-icons right">arrow_drop_down</i>
-                  </a>
-                ) : (
-                  <NavLink to="/login">Login</NavLink>
-                )}
-              </li>
-            </ul>
+          <div className="container">
+            <div className="nav-wrapper">
+              <a className="brand-logo">HandyCap</a>
+              <ul id="nav-mobile" className="right hide-on-med-and-down">
+                <li>
+                  {this.props.user ? (
+                    <a className="dropdown-button" data-activates="dropdown1">
+                      Welcome, {this.props.user}!
+                      <i className="material-icons right">arrow_drop_down</i>
+                    </a>
+                  ) : (
+                    <Link to="/login">Login</Link>
+                  )}
+                </li>
+              </ul>
+            </div>
           </div>
         </nav>
       </div>

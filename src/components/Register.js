@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import axios from "axios";
 
 class Register extends Component {
@@ -64,83 +65,104 @@ class Register extends Component {
 	}
 
 	render() {
+		const user = this.props.user;
 		return (
-			<div className="container">
-				<div className="row">
-					<form className="col s12 m6 offset-m3">
-						<div className="card blue-grey darken-1">
-							<div className="card-content white-text">
-								<span className="card-title">Register</span>
-								<div className="row">
-									<div className="input-field col s12">
-										<input
-											id="firstName"
-											type="text"
-											className="validate"
-											value={this.state.firstName}
-											onChange={
-												this.handleFirstNameChange
-											}
-										/>
-										<label htmlFor="firstName">
-											First Name
-										</label>
-									</div>
-								</div>
-								<div className="row">
-									<div className="input-field col s12">
-										<input
-											id="lastName"
-											type="text"
-											className="validate"
-											value={this.state.lastName}
-											onChange={this.handleLastNameChange}
-										/>
-										<label htmlFor="lastName">
-											Last Name
-										</label>
-									</div>
-								</div>
-								<div className="row">
-									<div className="input-field col s12">
-										<input
-											id="registerEmail"
-											type="email"
-											className="validate"
-											value={this.state.emailValue}
-											onChange={this.handleEmailChange}
-										/>
-										<label htmlFor="registerEmail">
-											Email
-										</label>
-									</div>
-								</div>
-								<div className="row">
-									<div className="input-field col s12">
-										<input
-											id="registerPassword"
-											type="password"
-											value={this.state.passwordValue}
-											onChange={this.handlePasswordChange}
-										/>
-										<label htmlFor="registerPassword">
-											Password
-										</label>
-										<button
-											className="btn waves-effect waves-light right"
-											onClick={this.handleRegister}
-										>
+			<div>
+				{user ? (
+					<Redirect to="/profile" />
+				) : (
+					<div className="container">
+						<div className="row">
+							<form className="col s12 m6 offset-m3">
+								<div className="card blue-grey darken-1">
+									<div className="card-content white-text">
+										<span className="card-title">
 											Register
-											<i className="material-icons right">
-												send
-											</i>
-										</button>
+										</span>
+										<div className="row">
+											<div className="input-field col s12">
+												<input
+													id="firstName"
+													type="text"
+													className="validate"
+													value={this.state.firstName}
+													onChange={
+														this
+															.handleFirstNameChange
+													}
+												/>
+												<label htmlFor="firstName">
+													First Name
+												</label>
+											</div>
+										</div>
+										<div className="row">
+											<div className="input-field col s12">
+												<input
+													id="lastName"
+													type="text"
+													className="validate"
+													value={this.state.lastName}
+													onChange={
+														this
+															.handleLastNameChange
+													}
+												/>
+												<label htmlFor="lastName">
+													Last Name
+												</label>
+											</div>
+										</div>
+										<div className="row">
+											<div className="input-field col s12">
+												<input
+													id="registerEmail"
+													type="email"
+													className="validate"
+													value={
+														this.state.emailValue
+													}
+													onChange={
+														this.handleEmailChange
+													}
+												/>
+												<label htmlFor="registerEmail">
+													Email
+												</label>
+											</div>
+										</div>
+										<div className="row">
+											<div className="input-field col s12">
+												<input
+													id="registerPassword"
+													type="password"
+													value={
+														this.state.passwordValue
+													}
+													onChange={
+														this
+															.handlePasswordChange
+													}
+												/>
+												<label htmlFor="registerPassword">
+													Password
+												</label>
+											</div>
+										</div>
+										<div className="row center-align">
+											<button
+												className="btn waves-effect waves-light"
+												onClick={this.handleRegister}
+											>
+												Register
+											</button>
+										</div>
 									</div>
 								</div>
-							</div>
+							</form>
 						</div>
-					</form>
-				</div>
+					</div>
+				)}
 			</div>
 		);
 	}
