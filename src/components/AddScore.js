@@ -1,5 +1,9 @@
 import React, { Component } from "react";
-//import axios from "axios";
+import axios from "axios";
+
+const postButtonStyle = {
+	width: "100%"
+};
 
 class AddScore extends Component {
 	constructor(props) {
@@ -20,13 +24,13 @@ class AddScore extends Component {
 
 	handleCourseChange(event) {
 		this.setState({
-			emailValue: event.target.value
+			course: event.target.value
 		});
 	}
 
 	handleDateChange(event) {
 		this.setState({
-			passwordValue: event.target.value
+			date: event.target.value
 		});
 	}
 
@@ -44,6 +48,14 @@ class AddScore extends Component {
 
 	handleSubmit(event) {
 		event.preventDefault();
+		const authToken = localStorage.getItem("authToken");
+		axios
+			.post("/api/addScore", this.state, {
+				headers: { authorization: `Bearer ${authToken}` }
+			})
+			.then(response => {
+				console.log(response);
+			});
 	}
 
 	render() {
@@ -79,20 +91,32 @@ class AddScore extends Component {
 								<div className="row">
 									<div className="input-field col s12">
 										<input
+											id="date"
+											type="date"
+											value={this.state.date}
+											onChange={this.handleDateChange}
+										/>
+									</div>
+								</div>
+								<div className="row">
+									<div className="input-field col s12">
+										<input
 											id="gross"
-											type="text"
+											type="number"
 											value={this.state.grossValue}
 											onChange={this.handleGrossChange}
 										/>
 										<label htmlFor="gross">Gross</label>
+									</div>
+								</div>
+								<div className="row">
+									<div className="col s12">
 										<button
+											style={postButtonStyle}
 											className="btn waves-effect waves-light right"
 											onClick={this.handleSubmit}
 										>
-											Submit
-											<i className="material-icons right">
-												send
-											</i>
+											Post Score
 										</button>
 									</div>
 								</div>

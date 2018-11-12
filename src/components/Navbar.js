@@ -49,8 +49,13 @@ class Navbar extends Component {
             </Link>
           </li>
           <li className="blue-grey darken-1">
-            <Link to="/profile" className="white-text">
-              <span>Profile</span>
+            <Link to="/profile">
+              <span className="white-text">Profile</span>
+            </Link>
+          </li>
+          <li className="blue-grey darken-1">
+            <Link to="/addscore">
+              <span className="white-text">Post Score</span>
             </Link>
           </li>
           <li className="blue-grey darken-1">

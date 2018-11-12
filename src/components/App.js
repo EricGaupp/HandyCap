@@ -29,18 +29,19 @@ class App extends Component {
     const authToken = localStorage.getItem("authToken");
     if (authToken) {
       axios
-        .post("/api/verify", {
+        .post("/api/verifyStoredToken", {
           token: authToken
         })
         .then(response => {
-          this.setState({
-            tokenChecked: true
-          });
           if (response.data.decoded) {
             this.setState({
               userID: response.data.decoded.userID,
-              userFirstName: response.data.decoded.firstName
+              userFirstName: response.data.decoded.firstName,
+              tokenChecked: true
             });
+          } else {
+            this.setState({ tokenChecked: true });
+            localStorage.removeItem("authToken");
           }
         })
         .catch(error => {
@@ -106,7 +107,12 @@ class App extends Component {
             component={Profile}
             user={this.state.userID}
           />
-          <PrivateRoute exact path="/addscore" component={AddScore} />
+          <PrivateRoute
+            exact
+            path="/addscore"
+            component={AddScore}
+            user={this.state.userID}
+          />
         </Switch>
       </div>
     );

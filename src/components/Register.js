@@ -54,9 +54,10 @@ class Register extends Component {
 			})
 			.then(response => {
 				this.props.updateUser(
-					response.data.userID,
-					response.data.firstName
+					response.data.user.userID,
+					response.data.user.firstName
 				);
+				localStorage.setItem("authToken", response.data.token);
 				this.props.history.push("/profile");
 			})
 			.catch(error => {
@@ -65,7 +66,7 @@ class Register extends Component {
 	}
 
 	render() {
-		const user = this.props.user;
+		const { user } = this.props;
 		return (
 			<div>
 				{user ? (

@@ -6,7 +6,7 @@ const User = require("../db/models/user");
 const router = express.Router();
 
 const saltRounds = 10;
-const jwtKey = "SuperSecretKey";
+const jwtKey = process.env.JWT_KEY;
 
 router.post("/login", (req, res) => {
 	User.findOne({ email: req.body.email }, (err, result) => {
@@ -69,10 +69,25 @@ router.post("/register", (req, res) => {
 						},
 						(err, registeredUser) => {
 							if (err) throw err;
-							res.json({
-								userID: registeredUser._id,
-								firstName: registeredUser.firstName
-							});
+							jwt.sign(
+								{
+									userID: registeredUser._id,
+									firstName: registeredUser.firstName,
+									lastName: registeredUser.lastName
+								},
+								jwtKey,
+								{ expiresIn: "1h" },
+								(err, token) => {
+									res.json({
+										message: "New User Registered",
+										token: token,
+										user: {
+											userID: registeredUser._id,
+											firstName: registeredUser.firstName
+										}
+									});
+								}
+							);
 						}
 					);
 				});
@@ -83,7 +98,7 @@ router.post("/register", (req, res) => {
 	});
 });
 
-router.post("/verify", (req, res) => {
+router.post("/verifyStoredToken", (req, res) => {
 	jwt.verify(req.body.token, jwtKey, (err, decoded) => {
 		if (decoded) {
 			res.json({
@@ -94,6 +109,30 @@ router.post("/verify", (req, res) => {
 				message: "invalid token"
 			});
 		}
+	});
+});
+
+function verifyToken(req, res, next) {
+	const bearerHeader = req.headers["authorization"];
+	if (typeof bearerHeader !== "undefined") {
+		const bearer = bearerHeader.split(" ");
+		const token = bearer[1];
+		jwt.verify(token, jwtKey, (err, decoded) => {
+			if (err) {
+				res.sendStatus(403);
+			} else {
+				next();
+			}
+		});
+	} else {
+		res.sendStatus(403);
+	}
+}
+
+router.post("/addScore", verifyToken, (req, res) => {
+	//Logic to add to database
+	res.json({
+		message: "Score Added"
 	});
 });
 
