@@ -60,70 +60,68 @@ class AddScore extends Component {
 
 	render() {
 		return (
-			<div className="container">
-				<div className="row">
-					<form className="col s12 m6 offset-m3">
-						<div className="card blue-grey darken-1">
-							<div className="card-content white-text">
-								<span className="card-title">Post a Score</span>
-								<div className="row">
-									<div className="input-field col s12">
-										<input
-											id="course"
-											type="text"
-											value={this.state.courseValue}
-											onChange={this.handleCourseChange}
-										/>
-										<label htmlFor="course">Course</label>
-									</div>
+			<div className="row">
+				<form className="col s12 m6 offset-m3">
+					<div className="card blue-grey darken-1">
+						<div className="card-content white-text">
+							<span className="card-title">Post a Score</span>
+							<div className="row">
+								<div className="input-field col s12">
+									<input
+										id="course"
+										type="text"
+										value={this.state.courseValue}
+										onChange={this.handleCourseChange}
+									/>
+									<label htmlFor="course">Course</label>
 								</div>
-								<div className="row">
-									<div className="input-field col s12">
-										<input
-											id="tees"
-											type="text"
-											value={this.state.teesValue}
-											onChange={this.handleTeeChange}
-										/>
-										<label htmlFor="tees">Tees</label>
-									</div>
+							</div>
+							<div className="row">
+								<div className="input-field col s12">
+									<input
+										id="tees"
+										type="text"
+										value={this.state.teesValue}
+										onChange={this.handleTeeChange}
+									/>
+									<label htmlFor="tees">Tees</label>
 								</div>
-								<div className="row">
-									<div className="input-field col s12">
-										<input
-											id="date"
-											type="date"
-											value={this.state.date}
-											onChange={this.handleDateChange}
-										/>
-									</div>
+							</div>
+							<div className="row">
+								<div className="input-field col s12">
+									<input
+										id="date"
+										type="date"
+										value={this.state.date}
+										onChange={this.handleDateChange}
+									/>
 								</div>
-								<div className="row">
-									<div className="input-field col s12">
-										<input
-											id="gross"
-											type="number"
-											value={this.state.grossValue}
-											onChange={this.handleGrossChange}
-										/>
-										<label htmlFor="gross">Gross</label>
-									</div>
+							</div>
+							<div className="row">
+								<div className="input-field col s12">
+									<input
+										id="gross"
+										type="number"
+										value={this.state.grossValue}
+										onChange={this.handleGrossChange}
+									/>
+									<label htmlFor="gross">Gross</label>
 								</div>
-								<div className="row">
-									<div className="col s12">
-										<button
-											style={postButtonStyle}
-											className="btn waves-effect waves-light right"
-											onClick={this.handleSubmit}
-										>
-											Post Score
-										</button>
-									</div>
+							</div>
+							<div className="row">
+								<div className="col s12">
+									<button
+										style={postButtonStyle}
+										className="btn waves-effect waves-light right"
+										onClick={this.handleSubmit}
+									>
+										Post Score
+									</button>
 								</div>
 							</div>
 						</div>
-					</form>
-				</div>
+					</div>
+				</form>
 			</div>
 		);
 	}

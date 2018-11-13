@@ -1,14 +1,14 @@
 import axios from "axios";
 import React, { Component } from "react";
-import { Route, Switch, withRouter } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 
-import AddScore from "./AddScore";
 import Home from "./Home";
 import Login from "./Login";
 import Navbar from "./Navbar";
 import PrivateRoute from "./PrivateRoute";
 import Profile from "./Profile";
 import Register from "./Register";
+import Spinner from "./Spinner";
 
 import "../css/materialize.css";
 
@@ -75,50 +75,46 @@ class App extends Component {
     return (
       <div>
         <Navbar user={this.state.userFirstName} logout={this.logout} />
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route
-            exact
-            path="/login"
-            render={props => (
-              <Login
-                user={this.state.userID}
-                tokenChecked={this.state.tokenChecked}
-                updateUser={this.updateUser}
-                {...props}
-              />
-            )}
-          />
-          <Route
-            exact
-            path="/register"
-            render={props => (
-              <Register
-                user={this.state.userID}
-                updateUser={this.updateUser}
-                {...props}
-              />
-            )}
-          />
-          {/*Protected Routes for Authenticated Users*/}
-          <PrivateRoute
-            exact
-            path="/profile"
-            component={Profile}
-            user={this.state.userID}
-          />
-          <PrivateRoute
-            exact
-            path="/addscore"
-            component={AddScore}
-            user={this.state.userID}
-          />
-        </Switch>
+        {!this.state.tokenChecked ? (
+          <Spinner />
+        ) : (
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route
+              exact
+              path="/login"
+              render={props => (
+                <Login
+                  user={this.state.userID}
+                  tokenChecked={this.state.tokenChecked}
+                  updateUser={this.updateUser}
+                  {...props}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/register"
+              render={props => (
+                <Register
+                  user={this.state.userID}
+                  updateUser={this.updateUser}
+                  {...props}
+                />
+              )}
+            />
+            {/*Protected Routes for Authenticated Users*/}
+            <PrivateRoute
+              path="/profile"
+              component={Profile}
+              user={this.state.userID}
+            />
+            <Redirect to="/" />
+          </Switch>
+        )}
       </div>
     );
   }
 }
 
-const AppWithRouter = withRouter(App);
-
-export default AppWithRouter;
+export default App;

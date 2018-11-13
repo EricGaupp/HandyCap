@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const User = require("../db/models/user");
+const Course = require("../db/models/course");
 
 const router = express.Router();
 
@@ -133,6 +134,30 @@ router.post("/addScore", verifyToken, (req, res) => {
 	//Logic to add to database
 	res.json({
 		message: "Score Added"
+	});
+});
+
+router.post("/addCourse", (req, res) => {
+	Course.findOne({ courseName: req.body.course }, (err, result) => {
+		if (err) throw err;
+		if (!result) {
+			Course.create(
+				{
+					courseName: req.body.courseName,
+					city: req.body.city,
+					state: req.body.state,
+					tees: req.body.tees
+				},
+				(err, addedCourse) => {
+					if (err) throw err;
+					res.json({
+						message: "Course Added to DB"
+					});
+				}
+			);
+		} else {
+			res.json({ message: "Course already exists in DB" });
+		}
 	});
 });
 

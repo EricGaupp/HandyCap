@@ -54,15 +54,8 @@ class Navbar extends Component {
             </Link>
           </li>
           <li className="blue-grey darken-1">
-            <Link to="/addscore">
-              <span className="white-text">Post Score</span>
-            </Link>
-          </li>
-          <li className="blue-grey darken-1">
-            <Link to="/">
-              <span className="white-text" onClick={this.handleLogout}>
-                Logout
-              </span>
+            <Link to="/" onClick={this.handleLogout}>
+              <span className="white-text">Logout</span>
             </Link>
           </li>
         </ul>
