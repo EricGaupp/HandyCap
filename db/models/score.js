@@ -16,10 +16,20 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const scoreSchema = new Schema({
+	user: {
+		type: Schema.Types.ObjectId,
+		ref: "User",
+		required: "User Required"
+	},
 	date: {
 		type: Date,
-		required: true
-	}
+		required: "Date Required"
+	},
+	course: {
+		type: Schema.Types.ObjectId,
+		ref: "Course",
+		required: "Course Required"
+	},
 	grossScore: {
 		type: Number,
 		required: "Gross Score Required"
@@ -30,13 +40,8 @@ const scoreSchema = new Schema({
 	netScore: {
 		type: Number
 	},
-	course: {
-		type: Schema.Types.ObjectId,
-		ref: "Course"
-	},
-	tees: {
-		type: Schema.Types.ObjectId,
-		ref: "Tees"
+	differential: {
+		type: Number
 	}
 });
 

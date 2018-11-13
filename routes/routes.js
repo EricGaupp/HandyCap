@@ -1,8 +1,11 @@
-const bcrypt = require("bcrypt");
 const express = require("express");
+
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
 const User = require("../db/models/user");
 const Course = require("../db/models/course");
+const Score = require("../db/models/score");
 
 const router = express.Router();
 
@@ -99,6 +102,24 @@ router.post("/register", (req, res) => {
 	});
 });
 
+function verifyToken(req, res, next) {
+	const bearerHeader = req.headers["authorization"];
+	if (typeof bearerHeader !== "undefined") {
+		const bearer = bearerHeader.split(" ");
+		const token = bearer[1];
+		jwt.verify(token, jwtKey, (err, decoded) => {
+			if (err) {
+				res.sendStatus(403);
+			} else {
+				req.body.userID = decoded.userID;
+				next();
+			}
+		});
+	} else {
+		res.sendStatus(403);
+	}
+}
+
 router.post("/verifyStoredToken", (req, res) => {
 	jwt.verify(req.body.token, jwtKey, (err, decoded) => {
 		if (decoded) {
@@ -113,52 +134,7 @@ router.post("/verifyStoredToken", (req, res) => {
 	});
 });
 
-function verifyToken(req, res, next) {
-	const bearerHeader = req.headers["authorization"];
-	if (typeof bearerHeader !== "undefined") {
-		const bearer = bearerHeader.split(" ");
-		const token = bearer[1];
-		jwt.verify(token, jwtKey, (err, decoded) => {
-			if (err) {
-				res.sendStatus(403);
-			} else {
-				next();
-			}
-		});
-	} else {
-		res.sendStatus(403);
-	}
-}
-
-router.post("/addScore", verifyToken, (req, res) => {
-	//Logic to add to database
-	res.json({
-		message: "Score Added"
-	});
-});
-
-router.post("/addCourse", (req, res) => {
-	Course.findOne({ courseName: req.body.course }, (err, result) => {
-		if (err) throw err;
-		if (!result) {
-			Course.create(
-				{
-					courseName: req.body.courseName,
-					city: req.body.city,
-					state: req.body.state,
-					tees: req.body.tees
-				},
-				(err, addedCourse) => {
-					if (err) throw err;
-					res.json({
-						message: "Course Added to DB"
-					});
-				}
-			);
-		} else {
-			res.json({ message: "Course already exists in DB" });
-		}
-	});
-});
+const protectedRoutes = require("./protectedRoutes");
+router.use("/api", verifyToken, protectedRoutes);
 
 module.exports = router;

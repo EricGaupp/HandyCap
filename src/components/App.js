@@ -29,10 +29,11 @@ class App extends Component {
     const authToken = localStorage.getItem("authToken");
     if (authToken) {
       axios
-        .post("/api/verifyStoredToken", {
+        .post("/verifyStoredToken", {
           token: authToken
         })
         .then(response => {
+          console.log(response);
           if (response.data.decoded) {
             this.setState({
               userID: response.data.decoded.userID,

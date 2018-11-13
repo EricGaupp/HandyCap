@@ -13,8 +13,8 @@ app.use(bodyParser.json());
 
 app.use("/", express.static(path.resolve(__dirname, "./build")));
 
-const apiRoutes = require("./routes/apiRoutes.js");
-app.use("/api", apiRoutes);
+const routes = require("./routes/routes.js");
+app.use("/", routes);
 
 app.get("*", (req, res) => {
 	res.sendFile(path.resolve(__dirname, "./build/index.html"));

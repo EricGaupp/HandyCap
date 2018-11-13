@@ -36,7 +36,7 @@ class Login extends Component {
 	handleLogin(event) {
 		event.preventDefault();
 		axios
-			.post("/api/login", {
+			.post("/login", {
 				email: this.state.emailValue,
 				password: this.state.passwordValue
 			})
