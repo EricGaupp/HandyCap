@@ -1,7 +1,10 @@
 const express = require("express");
 
+const mongoose = require("mongoose");
+
 const Course = require("../db/models/course");
 const Score = require("../db/models/score");
+const Tee = require("../db/models/tee");
 
 const router = express.Router();
 
@@ -34,9 +37,21 @@ router.post("/addScore", (req, res) => {
 		},
 		(err, addedScore) => {
 			if (err) throw err;
+			//Logic to update users handicap
 			res.json({ message: "Score Added", addedScore });
 		}
 	);
+});
+
+router.get("/getScores", (req, res) => {
+	Score.find({ user: mongoose.Types.ObjectId(req.body.userID) })
+		.populate("courseId")
+		.populate("teesId")
+		.exec((err, results) => {
+			if (err) throw err;
+			//Find a way to sort by 20 most recent
+			res.json(results);
+		});
 });
 
 router.post("/addCourse", (req, res) => {

@@ -33,7 +33,6 @@ class App extends Component {
           token: authToken
         })
         .then(response => {
-          console.log(response);
           if (response.data.decoded) {
             this.setState({
               userID: response.data.decoded.userID,
