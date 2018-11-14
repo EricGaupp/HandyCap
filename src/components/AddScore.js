@@ -9,44 +9,48 @@ class AddScore extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			course: "",
+			availableCourses: [],
+			availableTees: [],
+			courseId: "",
 			date: "",
-			tees: "",
-			gross: ""
+			teesId: "",
+			grossScore: "",
+			courseHandicap: ""
 		};
-
-		this.handleCourseChange = this.handleCourseChange.bind(this);
-		this.handleDateChange = this.handleDateChange.bind(this);
-		this.handleTeeChange = this.handleTeeChange.bind(this);
-		this.handleGrossChange = this.handleGrossChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	handleCourseChange(event) {
+	handleCourseChange = event => {
 		this.setState({
 			course: event.target.value
 		});
-	}
+		//AJAX call to set state for avaiable tees for that course
+	};
 
-	handleDateChange(event) {
+	handleCourseHandicapChange = event => {
+		this.setState({
+			courseHandicap: event.target.value
+		});
+	};
+
+	handleDateChange = event => {
 		this.setState({
 			date: event.target.value
 		});
-	}
+	};
 
-	handleTeeChange(event) {
+	handleTeeChange = event => {
 		this.setState({
-			tees: event.target.value
+			teesId: event.target.value
 		});
-	}
+	};
 
-	handleGrossChange(event) {
+	handleGrossChange = event => {
 		this.setState({
 			gross: parseInt(event.target.value, 10)
 		});
-	}
+	};
 
-	handleSubmit(event) {
+	handleSubmit = event => {
 		event.preventDefault();
 		const authToken = localStorage.getItem("authToken");
 		axios
@@ -56,6 +60,12 @@ class AddScore extends Component {
 			.then(response => {
 				console.log(response);
 			});
+	};
+
+	componentDidMount() {
+		{
+			/*AJAX Call to get available courses to inject into state to then populate dropdown box*/
+		}
 	}
 
 	render() {
@@ -67,6 +77,7 @@ class AddScore extends Component {
 							<span className="card-title">Post a Score</span>
 							<div className="row">
 								<div className="input-field col s12">
+									{/*Convert to dropdown of courses available in this.state. Assign data-attribute as course ObjectId*/}
 									<input
 										id="course"
 										type="text"
@@ -106,6 +117,21 @@ class AddScore extends Component {
 										onChange={this.handleGrossChange}
 									/>
 									<label htmlFor="gross">Gross</label>
+								</div>
+							</div>
+							<div className="row">
+								<div className="input-field col s12">
+									<input
+										id="courseHandicap"
+										type="number"
+										value={this.state.courseHandicapValue}
+										onChange={
+											this.handleCourseHandicapChange
+										}
+									/>
+									<label htmlFor="courseHandicap">
+										Course Handicap
+									</label>
 								</div>
 							</div>
 							<div className="row">

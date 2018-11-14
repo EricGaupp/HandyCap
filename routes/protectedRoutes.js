@@ -1,32 +1,40 @@
 const express = require("express");
 
-const User = require("../db/models/user");
 const Course = require("../db/models/course");
 const Score = require("../db/models/score");
 
 const router = express.Router();
 
 router.post("/addScore", (req, res) => {
+	let netScore = req.body.grossScore;
+	let differential, courseRating, courseSlope;
 	const {
 		userID,
-		course,
 		date,
+		courseId,
+		teesId,
 		grossScore,
-		courseHandicap,
-		netScore
+		courseHandicap
 	} = req.body;
+	//Quick mafs for Net Score and Differential if course handicap defined
+	if (courseHandicap !== "undefined") {
+		netScore = grossScore - courseHandicap;
+		differential = ((grossScore - courseRating) * 113) / courseSlope;
+	}
 	Score.create(
 		{
+			user: userID,
 			date: date,
+			courseId: courseId,
+			teesId: teesId,
 			grossScore: grossScore,
 			courseHandicap: courseHandicap,
 			netScore: netScore,
-			course: course,
-			user: userID
+			differential: differential
 		},
 		(err, addedScore) => {
 			if (err) throw err;
-			res.json(addedScore);
+			res.json({ message: "Score Added", addedScore });
 		}
 	);
 });

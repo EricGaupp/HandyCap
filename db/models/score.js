@@ -1,16 +1,3 @@
-/**
-Scores Schema-
-	Date:
-	Tees: {
-		Rating:
-		Slope:
-	}
-	Gross:
-	Handicap Index at time:
-	Course Handicap:
-	Net:
-**/
-
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
@@ -25,10 +12,15 @@ const scoreSchema = new Schema({
 		type: Date,
 		required: "Date Required"
 	},
-	course: {
+	courseId: {
 		type: Schema.Types.ObjectId,
 		ref: "Course",
 		required: "Course Required"
+	},
+	teesId: {
+		type: Schema.Types.ObjectId,
+		ref: "Tee",
+		required: "Tees Required"
 	},
 	grossScore: {
 		type: Number,
