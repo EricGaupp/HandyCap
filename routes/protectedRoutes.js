@@ -26,7 +26,7 @@ router.post("/addScore", (req, res) => {
 	}
 	Score.create(
 		{
-			user: userID,
+			user: mongoose.Types.ObjectId(userID),
 			date: date,
 			courseId: courseId,
 			teesId: teesId,
@@ -41,6 +41,15 @@ router.post("/addScore", (req, res) => {
 			res.json({ message: "Score Added", addedScore });
 		}
 	);
+});
+
+router.get("/getCourses", (req, res) => {
+	Course.find({})
+		.sort("courseName")
+		.exec((err, results) => {
+			if (err) throw err;
+			res.json(results);
+		});
 });
 
 router.get("/getScores", (req, res) => {

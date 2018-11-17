@@ -11,39 +11,33 @@ class Register extends Component {
 			emailValue: "",
 			passwordValue: ""
 		};
-
-		this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
-		this.handleLastNameChange = this.handleLastNameChange.bind(this);
-		this.handleEmailChange = this.handleEmailChange.bind(this);
-		this.handlePasswordChange = this.handlePasswordChange.bind(this);
-		this.handleRegister = this.handleRegister.bind(this);
 	}
 
-	handleFirstNameChange(event) {
+	handleFirstNameChange = event => {
 		this.setState({
 			firstName: event.target.value
 		});
-	}
+	};
 
-	handleLastNameChange(event) {
+	handleLastNameChange = event => {
 		this.setState({
 			lastName: event.target.value
 		});
-	}
+	};
 
-	handleEmailChange(event) {
+	handleEmailChange = event => {
 		this.setState({
-			emailValue: event.target.value
+			emailValue: event.target.value.toLowerCase()
 		});
-	}
+	};
 
-	handlePasswordChange(event) {
+	handlePasswordChange = event => {
 		this.setState({
 			passwordValue: event.target.value
 		});
-	}
+	};
 
-	handleRegister(event) {
+	handleRegister = event => {
 		event.preventDefault();
 		axios
 			.post("/register", {
@@ -55,7 +49,8 @@ class Register extends Component {
 			.then(response => {
 				this.props.updateUser(
 					response.data.user.userID,
-					response.data.user.firstName
+					response.data.user.firstName,
+					response.data.token
 				);
 				localStorage.setItem("authToken", response.data.token);
 				this.props.history.push("/profile");
@@ -63,7 +58,7 @@ class Register extends Component {
 			.catch(error => {
 				console.log(error);
 			});
-	}
+	};
 
 	render() {
 		const { user } = this.props;

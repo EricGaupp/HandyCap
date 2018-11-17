@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
 
+import "materialize-css/dist/css/materialize.min.css";
+import M from "materialize-css";
+
 const postButtonStyle = {
 	width: "100%"
 };
@@ -10,6 +13,7 @@ class AddScore extends Component {
 		super(props);
 		this.state = {
 			availableCourses: [],
+			selectedCourse: null,
 			availableTees: [],
 			courseId: "",
 			date: "",
@@ -63,15 +67,24 @@ class AddScore extends Component {
 	};
 
 	componentDidMount() {
-		{
-			/*AJAX Call to get available courses to inject into state to then populate dropdown box*/
-		}
+		//AJAX Call to get available courses to inject into state to then populate dropdown box
+		const authToken = localStorage.getItem("authToken");
+		axios
+			.get("/api/getCourses", {
+				headers: { authorization: `Bearer ${authToken}` }
+			})
+			.then(results => this.setState({ availableCourses: results.data }));
+	}
+
+	componentDidUpdate() {
+		var elems = document.querySelectorAll("select");
+		M.FormSelect.init(elems);
 	}
 
 	render() {
 		return (
 			<div className="row">
-				<form className="col s12 m6 offset-m3">
+				<form className="col s12 m10 offset-m1">
 					<div className="card blue-grey darken-1">
 						<div className="card-content white-text">
 							<span className="card-title">Post a Score</span>
@@ -85,6 +98,22 @@ class AddScore extends Component {
 										onChange={this.handleCourseChange}
 									/>
 									<label htmlFor="course">Course</label>
+								</div>
+							</div>
+							<div className="row">
+								<div className="input-field col s12">
+									<select defaultValue="Choose Your Option">
+										{this.state.availableCourses.map(
+											course => {
+												return (
+													<option key={course._id}>
+														{course.courseName}
+													</option>
+												);
+											}
+										)}
+									</select>
+									<label>Courses</label>
 								</div>
 							</div>
 							<div className="row">

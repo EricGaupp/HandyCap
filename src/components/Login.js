@@ -15,25 +15,21 @@ class Login extends Component {
 			emailValue: "",
 			passwordValue: ""
 		};
-
-		this.handleEmailChange = this.handleEmailChange.bind(this);
-		this.handlePasswordChange = this.handlePasswordChange.bind(this);
-		this.handleLogin = this.handleLogin.bind(this);
 	}
 
-	handleEmailChange(event) {
+	handleEmailChange = event => {
 		this.setState({
-			emailValue: event.target.value
+			emailValue: event.target.value.toLowerCase()
 		});
-	}
+	};
 
-	handlePasswordChange(event) {
+	handlePasswordChange = event => {
 		this.setState({
 			passwordValue: event.target.value
 		});
-	}
+	};
 
-	handleLogin(event) {
+	handleLogin = event => {
 		event.preventDefault();
 		axios
 			.post("/login", {
@@ -41,10 +37,12 @@ class Login extends Component {
 				password: this.state.passwordValue
 			})
 			.then(response => {
+				const { userID, firstName } = response.data.user;
 				if (response.data.user.userID) {
 					this.props.updateUser(
-						response.data.user.userID,
-						response.data.user.firstName
+						userID,
+						firstName,
+						response.data.token
 					);
 					localStorage.setItem("authToken", response.data.token);
 					this.props.history.push("/profile");
@@ -53,7 +51,7 @@ class Login extends Component {
 			.catch(error => {
 				console.log(error);
 			});
-	}
+	};
 
 	render() {
 		const { user, tokenChecked } = this.props;

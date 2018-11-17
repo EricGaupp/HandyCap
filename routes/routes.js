@@ -13,29 +13,32 @@ const saltRounds = 10;
 const jwtKey = process.env.JWT_KEY;
 
 router.post("/login", (req, res) => {
-	User.findOne({ email: req.body.email }, (err, result) => {
+	User.findOne({ email: req.body.email }, (err, userResult) => {
 		if (err) throw err;
-		if (result) {
+		if (userResult) {
+			//If user found compare hash
 			bcrypt.compare(
 				req.body.password,
-				result.password,
+				userResult.password,
 				(err, compared) => {
+					//Consider grabbing scores here
+					//If hash matches sign and return JWT with user's mongo ObjectId and firstName as payload
 					if (compared) {
 						jwt.sign(
 							{
-								userID: result._id,
-								firstName: result.firstName,
-								lastName: result.lastName
+								userID: userResult._id,
+								firstName: userResult.firstName
 							},
 							jwtKey,
 							{ expiresIn: "1h" },
 							(err, token) => {
+								if (err) throw err;
 								res.json({
 									message: "Matched hash...logging in",
 									token: token,
 									user: {
-										userID: result._id,
-										firstName: result.firstName
+										userID: userResult._id,
+										firstName: userResult.firstName
 									}
 								});
 							}
@@ -63,7 +66,7 @@ router.post("/register", (req, res) => {
 			//Hash Password with Bcrypt here
 			bcrypt.genSalt(saltRounds, (err, salt) => {
 				bcrypt.hash(req.body.password, salt, (err, hash) => {
-					// Store hash in your password DB.
+					// Store hash in database then sign and return JWT with user's mongo ObjectId and firstName
 					User.create(
 						{
 							email: req.body.email,
@@ -76,8 +79,7 @@ router.post("/register", (req, res) => {
 							jwt.sign(
 								{
 									userID: registeredUser._id,
-									firstName: registeredUser.firstName,
-									lastName: registeredUser.lastName
+									firstName: registeredUser.firstName
 								},
 								jwtKey,
 								{ expiresIn: "1h" },

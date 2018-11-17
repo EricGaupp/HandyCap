@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { Component } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
+import "materialize-css/dist/css/materialize.min.css";
+
 import Home from "./Home";
 import Login from "./Login";
 import Navbar from "./Navbar";
@@ -10,62 +12,89 @@ import Profile from "./Profile";
 import Register from "./Register";
 import Spinner from "./Spinner";
 
-import "../css/materialize.css";
-
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      tokenChecked: false,
+      authToken: null,
       userID: null,
       userFirstName: null,
-      tokenChecked: false
+      userScores: null
     };
-    this.checkToken = this.checkToken.bind(this);
-    this.updateUser = this.updateUser.bind(this);
-    this.logout = this.logout.bind(this);
   }
 
-  checkToken() {
+  checkToken = () => {
     const authToken = localStorage.getItem("authToken");
     if (authToken) {
+      this.setState({ authToken: authToken });
       axios
         .post("/verifyStoredToken", {
           token: authToken
         })
         .then(response => {
           if (response.data.decoded) {
-            this.setState({
-              userID: response.data.decoded.userID,
-              userFirstName: response.data.decoded.firstName,
-              tokenChecked: true
-            });
+            const { userID, firstName } = response.data.decoded;
+            this.setState(
+              {
+                tokenChecked: true
+              },
+              () => {
+                this.updateUser(userID, firstName, authToken);
+              }
+            );
           } else {
-            this.setState({ tokenChecked: true });
-            localStorage.removeItem("authToken");
+            this.setState({ tokenChecked: true }, () => {
+              localStorage.removeItem("authToken");
+            });
           }
         })
         .catch(error => {
-          console.log(error);
+          throw error;
         });
     } else {
       this.setState({
         tokenChecked: true
       });
     }
-  }
+  };
 
-  updateUser(userID, userFirstName) {
-    this.setState({
-      userID: userID,
-      userFirstName: userFirstName
-    });
-  }
+  getScores = () => {
+    const authToken = this.state.authToken;
+    if (authToken) {
+      axios
+        .get("/api/getScores", {
+          headers: { authorization: `Bearer ${authToken}` }
+        })
+        .then(response => {
+          this.setState({ userScores: response.data });
+        });
+    }
+  };
 
-  logout() {
+  logout = () => {
     localStorage.removeItem("authToken");
-    this.updateUser(null, null);
+    this.setState({
+      userID: null,
+      userFirstName: null,
+      userScores: null,
+      authToken: null
+    });
     this.props.history.push("/");
-  }
+  };
+
+  updateUser = (userID, userFirstName, authToken) => {
+    this.setState(
+      {
+        userID: userID,
+        userFirstName: userFirstName,
+        authToken: authToken
+      },
+      () => {
+        this.getScores();
+      }
+    );
+  };
 
   componentDidMount() {
     this.checkToken();
@@ -105,9 +134,10 @@ class App extends Component {
             />
             {/*Protected Routes for Authenticated Users*/}
             <PrivateRoute
-              path="/profile"
               component={Profile}
-              user={this.state.userID}
+              path="/profile"
+              scores={this.state.userScores}
+              user={this.state.userFirstName}
             />
             <Redirect to="/" />
           </Switch>
