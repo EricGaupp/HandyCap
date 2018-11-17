@@ -21,11 +21,10 @@ app.get("*", (req, res) => {
 });
 
 // Connection URL
-const url = process.env.MONGODB_URI || "mongodb://localhost:27017/handycapped";
-console.log(url);
+const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/handycapped";
 
 // Use connect method to connect to the server
-mongoose.connect(url);
+mongoose.connect(uri);
 
 const db = mongoose.connection;
 
