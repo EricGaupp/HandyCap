@@ -7,7 +7,7 @@ const path = require("path");
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.API_PORT || 8080;
+const PORT = process.env.PORT || 8080;
 
 app.use(bodyParser.json());
 
@@ -21,7 +21,8 @@ app.get("*", (req, res) => {
 });
 
 // Connection URL
-const url = process.env.DB_HOST || "mongodb://localhost:27017/handycapped";
+const url = process.env.MONGODB_URI || "mongodb://localhost:27017/handycapped";
+console.log(url);
 
 // Use connect method to connect to the server
 mongoose.connect(url);
@@ -34,5 +35,3 @@ db.once("open", function() {
 		console.log("Listening on port %s", PORT);
 	});
 });
-
-//Test commit for git config for auth and contribution settings
