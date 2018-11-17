@@ -34,3 +34,5 @@ db.once("open", function() {
 		console.log("Listening on port %s", PORT);
 	});
 });
+
+//Test commit for git config for auth and contribution settings
