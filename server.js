@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 8080;
 app.use(bodyParser.json());
 
 app.use("/", express.static(path.resolve(__dirname, "./build")));
+console.log(__dirname);
 
 const routes = require("./routes/routes.js");
 app.use("/", routes);
@@ -22,6 +23,7 @@ app.get("*", (req, res) => {
 
 // Connection URL
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/handycapped";
+console.log("mongoURI: %s", process.env.MONGODB_URI);
 
 // Use connect method to connect to the server
 mongoose.connect(uri);

@@ -1,6 +1,9 @@
 {
   "name": "handycappedreact",
   "version": "0.1.0",
+  "engines": {
+    "node": "10.4.1"
+  },
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
@@ -17,11 +20,12 @@
   },
   "scripts": {
     "start": "node server.js",
-    "startScripts": "react-scripts start",
-    "build": "react-scripts build",
+    "reactstart": "react-scripts start",
+    "build": "echo building && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "dev": "concurrently --kill-others-on-fail \"npm run startScripts\" \"nodemon server\""
+    "dev": "concurrently --kill-others-on-fail \"npm run reactstart\" \"nodemon server\"",
+    "heroku-postbuild": "echo building from heroku-postbuild script && npm run build"
   },
   "devDependencies": {
     "concurrently": "^3.5.1"
