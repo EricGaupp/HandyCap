@@ -45,7 +45,7 @@ class Navbar extends Component {
             </Link>
           </li>
         </ul>
-        <nav>
+        <nav className="blue-grey darken-3">
           <div className="container">
             <div className="nav-wrapper">
               <a className="brand-logo">HandyCap</a>

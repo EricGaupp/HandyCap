@@ -12,9 +12,13 @@ class AddScore extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			availableStates: [],
+			selectedState: null,
 			availableCourses: [],
 			selectedCourse: null,
+			availableCoursesByState: [],
 			availableTees: [],
+			selectedTess: null,
 			courseId: "",
 			date: "",
 			teesId: "",
@@ -24,10 +28,8 @@ class AddScore extends Component {
 	}
 
 	handleCourseChange = event => {
-		this.setState({
-			course: event.target.value
-		});
-		//AJAX call to set state for avaiable tees for that course
+		//Change Available Tees
+		this.setState({ selectedCourse: event.target.value });
 	};
 
 	handleCourseHandicapChange = event => {
@@ -42,15 +44,20 @@ class AddScore extends Component {
 		});
 	};
 
-	handleTeeChange = event => {
-		this.setState({
-			teesId: event.target.value
-		});
-	};
-
 	handleGrossChange = event => {
 		this.setState({
 			gross: parseInt(event.target.value, 10)
+		});
+	};
+
+	handleStateChange = event => {
+		this.setState({ selectedState: event.target.value });
+		const coursesByState = this.state.availableCourses
+			.filter(course => course.state === event.target.value)
+			.sort();
+		this.setState({
+			availableCoursesByState: coursesByState,
+			selectedCourse: coursesByState[0].courseName
 		});
 	};
 
@@ -73,7 +80,21 @@ class AddScore extends Component {
 			.get("/api/getCourses", {
 				headers: { authorization: `Bearer ${authToken}` }
 			})
-			.then(results => this.setState({ availableCourses: results.data }));
+			.then(results => {
+				//Initialize a Sorted State for State, Course and Tee data
+				const states = results.data.map(course => course.state).sort();
+				const setOfStates = [...new Set(states)];
+				const coursesByState = results.data
+					.filter(course => course.state === setOfStates[0])
+					.sort();
+				this.setState({
+					availableCourses: results.data,
+					availableStates: setOfStates,
+					selectedState: setOfStates[0],
+					selectedCourse: coursesByState[0].courseName,
+					availableCoursesByState: coursesByState
+				});
+			});
 	}
 
 	componentDidUpdate() {
@@ -85,25 +106,35 @@ class AddScore extends Component {
 		return (
 			<div className="row">
 				<form className="col s12 m10 offset-m1">
-					<div className="card blue-grey darken-1">
+					<div className="card">
 						<div className="card-content white-text">
 							<span className="card-title">Post a Score</span>
 							<div className="row">
 								<div className="input-field col s12">
-									{/*Convert to dropdown of courses available in this.state. Assign data-attribute as course ObjectId*/}
-									<input
-										id="course"
-										type="text"
-										value={this.state.courseValue}
-										onChange={this.handleCourseChange}
-									/>
-									<label htmlFor="course">Course</label>
+									<select
+										value={this.state.selectedState || ""}
+										onChange={this.handleStateChange}
+									>
+										{this.state.availableStates.map(
+											state => {
+												return (
+													<option key={state}>
+														{state}
+													</option>
+												);
+											}
+										)}
+									</select>
+									<label>State</label>
 								</div>
 							</div>
 							<div className="row">
 								<div className="input-field col s12">
-									<select defaultValue="Choose Your Option">
-										{this.state.availableCourses.map(
+									<select
+										value={this.state.selectedCourse || ""}
+										onChange={this.handleCourseChange}
+									>
+										{this.state.availableCoursesByState.map(
 											course => {
 												return (
 													<option key={course._id}>

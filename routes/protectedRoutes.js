@@ -19,7 +19,7 @@ router.post("/addScore", (req, res) => {
 		grossScore,
 		courseHandicap
 	} = req.body;
-	//Quick mafs for Net Score and Differential if course handicap defined
+	//Quick mafs for Net Score and Differential if course handicap defined. Look into MongoDB triggers for updating userHandicap if changed
 	if (courseHandicap !== "undefined") {
 		netScore = grossScore - courseHandicap;
 		differential = ((grossScore - courseRating) * 113) / courseSlope;
@@ -44,12 +44,14 @@ router.post("/addScore", (req, res) => {
 });
 
 router.get("/getCourses", (req, res) => {
+	//Populate Tees - do I need to add Tees ObjectId back to Course model? Tees should always correspond to a course, Course should always have a set of tees
 	Course.find({})
 		.sort("courseName")
 		.exec((err, results) => {
 			if (err) throw err;
 			res.json(results);
 		});
+	//Alternatively do Tee.find({}).populate("courseId").exec(err,result => {res.json(results)}). Then on front end grab results.courseId and put in a sorted Set of courses
 });
 
 router.get("/getScores", (req, res) => {

@@ -2,7 +2,7 @@ import React from "react";
 
 const ProfileHome = ({ user, scores }) => {
 	let handicapIndex = 0;
-	if (scores !== null) {
+	if (scores !== null && scores.length > 0) {
 		handicapIndex =
 			(0.96 *
 				scores

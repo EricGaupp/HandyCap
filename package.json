@@ -21,11 +21,11 @@
   "scripts": {
     "start": "node server.js",
     "reactstart": "react-scripts start",
-    "build": "echo building && react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "dev": "concurrently --kill-others-on-fail \"npm run reactstart\" \"nodemon server\"",
-    "heroku-postbuild": "echo building from heroku-postbuild script && npm run build"
+    "heroku-postbuild": "npm run build"
   },
   "devDependencies": {
     "concurrently": "^3.5.1"
