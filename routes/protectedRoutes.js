@@ -60,7 +60,6 @@ router.get("/getScores", (req, res) => {
 		.populate("teesId")
 		.exec((err, results) => {
 			if (err) throw err;
-			//Find a way to sort by 20 most recent
 			res.json(results);
 		});
 });
